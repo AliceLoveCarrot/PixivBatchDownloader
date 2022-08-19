@@ -5,6 +5,7 @@ import { lang } from '../Lang'
 import { Tools } from '../Tools'
 import { options } from '../setting/Options'
 import { store } from '../store/Store'
+import { API } from '../API'
 
 class InitDiscoverPage extends InitPageBase {
   constructor() {
@@ -29,7 +30,7 @@ class InitDiscoverPage extends InitPageBase {
 
   protected getWantPage() {}
 
-  protected getIdList() {
+  protected getIdListOld() {
     // 在发现页面，直接获取页面上显示的作品，不需要获取列表页
     if (location.pathname.includes('/novel')) {
       // 小说页面
@@ -60,6 +61,18 @@ class InitDiscoverPage extends InitPageBase {
         })
       })
     }
+    this.getIdListFinished()
+  }
+
+  protected async getIdList(): Promise<void> {
+    let data = await API.getDiscoveryData()
+    let allIds = data.body.recommended_work_ids
+    allIds.forEach((id) => {
+      store.idList.push({
+        type: 'unknown',
+        id,
+      })
+    })
     this.getIdListFinished()
   }
 }

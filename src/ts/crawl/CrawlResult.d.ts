@@ -1216,3 +1216,11 @@ export interface LatestMessageData {
     next_url: string | null
   }
 }
+
+export interface DiscoveryData {
+  error: boolean
+  message: string
+  body: {
+    recommended_work_ids: Array<string>
+  }
+}
