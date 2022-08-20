@@ -211,7 +211,7 @@ class DownloadRecord {
       // 首先检查日期字符串是否发生了变化
       // 如果日期字符串变化了，则不视为重复文件
       if (data.d !== undefined && data.d !== this.getDateString(result)) {
-        return resolve(false)
+        //return resolve(false)
       }
       // 如果之前的下载记录里没有日期，说明是早期的下载记录，那么就不检查日期
       // 同时，更新这个作品的下载记录，为其添加日期
@@ -227,6 +227,34 @@ class DownloadRecord {
         const name = fileName.createFileName(result)
         return resolve(name === data.n)
       }
+    })
+  }
+
+  public async filterDuplicateIdList(idList: Array<string>) {
+    if (!Utils.isPixiv()) {
+      return idList
+    }
+    console.log(`filterDuplicateIdList before count=${idList.length}`)
+    return new Promise<Array<string>>(async (resolve, reject) => {
+      // 如果未启用去重，直接返回不重复
+      if (!settings.deduplication) {
+        return resolve(idList)
+      }
+      const toRemove = new Set<string>()
+      // 在数据库进行查找
+      for (const rid of idList) {
+        const id = `${rid}_p0`
+        const storeName = this.getStoreName(id)
+        const data = (await this.IDB.get(storeName, id)) as Record | null
+        data != null &&
+          console.debug(
+            `duplicate ${storeName} ${rid} id=${id} data=${data.id}`
+          )
+        data && toRemove.add(rid)
+      }
+      const results = idList.filter((x) => !toRemove.has(x))
+      console.log(`filterDuplicateIdList after count=${results.length}`)
+      return resolve(results)
     })
   }
 

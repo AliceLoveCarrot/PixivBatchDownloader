@@ -6,6 +6,8 @@ import { Tools } from '../Tools'
 import { options } from '../setting/Options'
 import { store } from '../store/Store'
 import { API } from '../API'
+import { log } from '../Log'
+import { downloadRecord } from '../download/DownloadRecord'
 
 class InitDiscoverPage extends InitPageBase {
   constructor() {
@@ -66,8 +68,13 @@ class InitDiscoverPage extends InitPageBase {
 
   protected async getIdList(): Promise<void> {
     let data = await API.getDiscoveryData()
-    let allIds = data.body.recommended_work_ids
-    allIds.forEach((id) => {
+    let allIds = data.body.recommended_work_ids || []
+    log.success(`[提示] 发现页作品抓取完毕，共${allIds.length}个作品`)
+    let finalIds = await downloadRecord.filterDuplicateIdList(allIds)
+    log.success(
+      `[提示] 发现页作品预处理完毕，去重后剩余${finalIds.length}个作品`
+    )
+    finalIds.forEach((id) => {
       store.idList.push({
         type: 'unknown',
         id,

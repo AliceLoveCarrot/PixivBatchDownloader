@@ -12,6 +12,7 @@ import { Tools } from '../Tools'
 import { API } from '../API'
 import { log } from '../Log'
 import { Utils } from '../utils/Utils'
+import { downloadRecord } from '../download/DownloadRecord'
 
 class InitArtworkPage extends InitPageBase {
   constructor() {
@@ -191,6 +192,9 @@ class InitArtworkPage extends InitPageBase {
       ids.push(illust.id)
     }
     ids = ids.concat(data.body.nextIds)
+    log.success(`[提示] 相关作品抓取完毕，共${ids.length}个作品`)
+    ids = await downloadRecord.filterDuplicateIdList(ids)
+    log.success(`[提示] 相关作品预处理完毕，去重后剩余${ids.length}个作品`)
 
     // 当设置了下载个数时，进行裁剪
     if (this.crawlNumber !== -1) {

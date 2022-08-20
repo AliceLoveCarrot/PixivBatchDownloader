@@ -18,6 +18,7 @@ import '../pageFunciton/SaveUserCover'
 import { BookmarkAllWorks, IDList } from '../pageFunciton/BookmarkAllWorks'
 import { Utils } from '../utils/Utils'
 import { Config } from '../config/Config'
+import { downloadRecord } from '../download/DownloadRecord'
 
 enum ListType {
   UserHome,
@@ -235,6 +236,12 @@ class InitUserPage extends InitPageBase {
     if (idList.length > requsetNumber) {
       idList.splice(0, idList.length - requsetNumber)
     }
+
+    log.success(`[提示] 个人作品抓取完毕，共${idList.length}个作品`)
+    let ids = idList.map((x) => x.id)
+    let finalIds = await downloadRecord.filterDuplicateIdList(ids)
+    idList = idList.filter((x) => finalIds.includes(x.id))
+    log.success(`[提示] 个人作品预处理完毕，去重后剩余${idList.length}个作品`)
 
     // 储存
     store.idList = store.idList.concat(idList)

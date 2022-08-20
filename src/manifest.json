@@ -1,5 +1,5 @@
 {
-  "name": "My Pixiv Downloader",
+  "name": "PixivDX",
   "version": "13.4.0",
   "manifest_version": 2,
   "description": "强大的 Pixiv 批量下载器。Powerful Pixiv batch downloader. 強力な Pixiv ダウンローダー。",
@@ -16,7 +16,7 @@
       "48": "icon/logo48.png",
       "128": "icon/logo128.png"
     },
-    "default_title": "Powerful Pixiv Downloader"
+    "default_title": "PixivDX"
   },
   "content_scripts": [
     {
