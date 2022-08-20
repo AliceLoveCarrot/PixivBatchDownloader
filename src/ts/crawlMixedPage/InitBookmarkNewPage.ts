@@ -15,6 +15,7 @@ import {
 } from '../crawl/CrawlResult'
 import { states } from '../store/States'
 import { Config } from '../config/Config'
+import { downloadRecord } from '../download/DownloadRecord'
 
 class InitBookmarkNewPage extends InitPageBase {
   constructor() {
@@ -136,6 +137,8 @@ class InitBookmarkNewPage extends InitPageBase {
     // 过滤作品
     // 过滤插画·漫画
     if (this.type === 'illust') {
+      let idList = Array<BookMarkNewIllustData>()
+
       for (const data of <BookMarkNewIllustData[]>worksData) {
         if (data.isAdContainer) {
           continue
@@ -154,11 +157,23 @@ class InitBookmarkNewPage extends InitPageBase {
         }
 
         if (await filter.check(filterOpt)) {
-          store.idList.push({
-            type: API.getWorkType(data.illustType),
-            id: data.id,
-          })
+          idList.push(data)
         }
+      }
+
+      log.success(`[提示] 已关注新作品抓取完毕，共${idList.length}个作品 (${p})`)
+      let ids = idList.map((x) => x.id)
+      let finalIds = await downloadRecord.filterDuplicateIdList(ids)
+      idList = idList.filter((x) => finalIds.includes(x.id))
+      log.success(
+        `[提示] 已关注新作品预处理完毕，去重后剩余${idList.length}个作品 (${p})`
+      )
+
+      for (const data of idList) {
+        store.idList.push({
+          type: API.getWorkType(data.illustType),
+          id: data.id,
+        })
       }
     } else {
       // 过滤小说
