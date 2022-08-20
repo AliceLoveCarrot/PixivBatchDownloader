@@ -22,6 +22,7 @@ import {
   NovelSeriesGlossary,
   NovelSeriesGlossaryItem,
   LatestMessageData,
+  DiscoveryData,
 } from './crawl/CrawlResult'
 
 import {
@@ -484,6 +485,13 @@ class API {
     return this.sendGetRequest(
       `https://www.pixiv.net/rpc/index.php?mode=latest_message_threads2&num=${number}&offset=0`
     )
+  }
+
+  // 获取发现页数据
+  static getDiscoveryData(): Promise<DiscoveryData> {
+    // 基础的 url
+    let url = `https://www.pixiv.net/touch/ajax/recommender/illust?mode=all&lang=zh`
+    return this.sendGetRequest(url)
   }
 }
 
