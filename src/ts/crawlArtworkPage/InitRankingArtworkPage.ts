@@ -7,12 +7,13 @@ import { Tools } from '../Tools'
 import { EVT } from '../EVT'
 import { options } from '../setting/Options'
 import { RankingOption } from '../crawl/CrawlArgument'
-import { RankingData } from '../crawl/CrawlResult'
+import { RankingData, ArtworkCommonData } from '../crawl/CrawlResult'
 import { filter, FilterOption } from '../filter/Filter'
 import { store } from '../store/Store'
 import { log } from '../Log'
 import { states } from '../store/States'
 import { Utils } from '../utils/Utils'
+import { downloadRecord } from '../download/DownloadRecord'
 
 class InitRankingArtworkPage extends InitPageBase {
   constructor() {
@@ -134,6 +135,7 @@ class InitRankingArtworkPage extends InitPageBase {
 
     this.listPageFinished++
 
+    let idList = []
     const contents = data.contents // 取出作品信息列表
     for (const data of contents) {
       // 检查是否已经抓取到了指定数量的作品
@@ -157,12 +159,25 @@ class InitRankingArtworkPage extends InitPageBase {
 
       if (await filter.check(filterOpt)) {
         store.setRankList(data.illust_id.toString(), data.rank)
-
-        store.idList.push({
-          type: API.getWorkType(data.illust_type),
-          id: data.illust_id.toString(),
-        })
+        idList.push(data)
       }
+    }
+
+    log.success(
+      `[提示] 排行榜作品抓取完毕，共${idList.length}个作品 (${this.option.p})`
+    )
+    let ids = idList.map((x) => '' + x.illust_id)
+    let finalIds = await downloadRecord.filterDuplicateIdList(ids)
+    idList = idList.filter((x) => finalIds.includes('' + x.illust_id))
+    log.success(
+      `[提示] 排行榜作品预处理完毕，去重后剩余${idList.length}个作品 (${this.option.p})`
+    )
+
+    for (const data of idList) {
+      store.idList.push({
+        type: API.getWorkType(data.illust_type),
+        id: '' + data.illust_id,
+      })
     }
 
     log.log(

@@ -12,6 +12,7 @@ import { Utils } from '../utils/Utils'
 import {
   BookMarkNewIllustData,
   BookMarkNewNovelData,
+  ArtworkCommonData,
 } from '../crawl/CrawlResult'
 import { states } from '../store/States'
 import { Config } from '../config/Config'
@@ -137,7 +138,7 @@ class InitBookmarkNewPage extends InitPageBase {
     // 过滤作品
     // 过滤插画·漫画
     if (this.type === 'illust') {
-      let idList = Array<BookMarkNewIllustData>()
+      let idList = Array<ArtworkCommonData>()
 
       for (const data of <BookMarkNewIllustData[]>worksData) {
         if (data.isAdContainer) {
@@ -161,7 +162,9 @@ class InitBookmarkNewPage extends InitPageBase {
         }
       }
 
-      log.success(`[提示] 已关注新作品抓取完毕，共${idList.length}个作品 (${p})`)
+      log.success(
+        `[提示] 已关注新作品抓取完毕，共${idList.length}个作品 (${p})`
+      )
       let ids = idList.map((x) => x.id)
       let finalIds = await downloadRecord.filterDuplicateIdList(ids)
       idList = idList.filter((x) => finalIds.includes(x.id))
