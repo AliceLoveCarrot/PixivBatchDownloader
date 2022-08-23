@@ -24,6 +24,9 @@ class InitDiscoverPage extends InitPageBase {
     ).addEventListener('click', () => {
       this.readyCrawl()
     })
+
+    this.addStartTimedCrawlBtn(this.readyCrawl.bind(this))
+    this.addCancelTimedCrawlBtn()
   }
 
   protected setFormOption() {

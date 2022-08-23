@@ -271,7 +271,7 @@ class API {
   // 获取排行榜数据
   // 排行榜数据基本是一批 50 条作品信息
   static getRankingData(option: RankingOption): Promise<RankingData> {
-    let url = `https://www.pixiv.net/ranking.php?mode=${option.mode}&p=${option.p}&format=json`
+    let url = `https://www.pixiv.net/ranking.php?mode=${option.mode}&content=${option.worksType}&p=${option.p}&format=json`
 
     // 把可选项添加到 url 里
     let temp = new URL(url)

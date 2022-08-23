@@ -107,7 +107,8 @@ class InitRankingArtworkPage extends InitPageBase {
     // mode 一定要有值，其他字段不需要一定有值
     this.option = this.resetOption()
     this.option.mode = Utils.getURLSearchField(location.href, 'mode') || 'daily'
-    this.option.worksType = Utils.getURLSearchField(location.href, 'content')
+    this.option.worksType =
+      Utils.getURLSearchField(location.href, 'content') || 'illust'
     this.option.date = Utils.getURLSearchField(location.href, 'date')
 
     this.startpageNo = 1
