@@ -176,7 +176,7 @@ class InitRankingArtworkPage extends InitPageBase {
 
     for (const data of idList) {
       store.idList.push({
-        type: API.getWorkType(data.illust_type),
+        type: Tools.getWorkTypeString(data.illust_type),
         id: '' + data.illust_id,
       })
     }
