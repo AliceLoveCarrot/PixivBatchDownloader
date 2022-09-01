@@ -1,5 +1,7 @@
 // 声明 Pixiv API 返回的数据格式
 
+import { type } from 'os'
+
 // 插画、漫画的详细数据（在作品页内使用的）
 export interface ArtworkData {
   error: boolean
@@ -1217,10 +1219,16 @@ export interface LatestMessageData {
   }
 }
 
-export interface DiscoveryData {
+export interface DiscoveryIDSData {
   error: boolean
   message: string
   body: {
     recommended_work_ids: Array<string>
+  }
+}
+
+export type DiscoveryData = BookMarkNewData & {
+  body: {
+    recommendedIllusts: []
   }
 }

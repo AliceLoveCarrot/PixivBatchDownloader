@@ -164,14 +164,11 @@ class InitBookmarkNewPage extends InitPageBase {
         }
       }
 
-      log.success(
-        `[提示] 已关注新作品抓取完毕，共${idList.length}个作品 (${p})`
-      )
       let ids = idList.map((x) => x.id)
       let finalIds = await downloadRecord.filterDuplicateIdList(ids)
       idList = idList.filter((x) => finalIds.includes(x.id))
       log.success(
-        `[提示] 已关注新作品预处理完毕，去重后剩余${idList.length}个作品 (${p})`
+        `[提示] 已关注用户共${ids.length}个作品，去重后剩余${idList.length}个 (${p})`
       )
 
       for (const data of idList) {

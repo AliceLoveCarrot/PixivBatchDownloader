@@ -164,14 +164,11 @@ class InitRankingArtworkPage extends InitPageBase {
       }
     }
 
-    log.success(
-      `[提示] 排行榜作品抓取完毕，共${idList.length}个作品 (${this.option.p})`
-    )
     let ids = idList.map((x) => '' + x.illust_id)
     let finalIds = await downloadRecord.filterDuplicateIdList(ids)
     idList = idList.filter((x) => finalIds.includes('' + x.illust_id))
     log.success(
-      `[提示] 排行榜作品预处理完毕，去重后剩余${idList.length}个作品 (${this.option.p})`
+      `[提示] 排行榜共${ids.length}个作品，去重后剩余${idList.length}个 (${this.option.p})`
     )
 
     for (const data of idList) {

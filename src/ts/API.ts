@@ -22,6 +22,7 @@ import {
   NovelSeriesGlossary,
   NovelSeriesGlossaryItem,
   LatestMessageData,
+  DiscoveryIDSData,
   DiscoveryData,
 } from './crawl/CrawlResult'
 
@@ -456,10 +457,21 @@ class API {
     )
   }
 
-  // 获取发现页数据
-  static getDiscoveryData(): Promise<DiscoveryData> {
+  // 获取发现页数据，1000个ID列表
+  static getDiscoveryIDS(mode: string = 'all'): Promise<DiscoveryIDSData> {
     // 基础的 url
-    let url = `https://www.pixiv.net/touch/ajax/recommender/illust?mode=all&lang=zh`
+    let url = `https://www.pixiv.net/touch/ajax/recommender/illust?mode=${mode}&lang=zh`
+    return this.sendGetRequest(url)
+  }
+
+  // 获取发现页数据，100条数据
+  static getDiscoveryData(
+    r18: boolean = false,
+    lang = 'zh'
+  ): Promise<DiscoveryData> {
+    const url = `https://www.pixiv.net/ajax/discovery/artworks?limit=100&mode=${
+      r18 ? 'r18' : 'all'
+    }&lang=${lang}`
     return this.sendGetRequest(url)
   }
 }
